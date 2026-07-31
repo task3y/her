@@ -1,0 +1,1130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>for you</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Dancing+Script:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --wine: #6b1e2b;
+        --wine-deep: #4a1420;
+        --wine-deeper: #33101a;
+        --cream: #fbf6ec;
+        --cream-warm: #f5eedf;
+        --blush: #f3d6d9;
+        --blush-deep: #e8b9c0;
+        --gold: #b8935f;
+        --ink: #2e241f;
+        --rose: #a84448;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: "Quicksand", sans-serif;
+        color: var(--ink);
+        background: var(--wine-deeper);
+        overflow: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .stage {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background:
+          radial-gradient(
+            ellipse 90% 60% at 50% 8%,
+            #822a3a 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 120% 90% at 50% 100%,
+            #3a1219 0%,
+            transparent 55%
+          ),
+          linear-gradient(180deg, var(--wine-deep) 0%, var(--wine-deeper) 100%);
+      }
+
+      /* ambient petals */
+      .petal {
+        position: absolute;
+        bottom: -8%;
+        border-radius: 60% 0 60% 0;
+        background: var(--blush);
+        opacity: 0.45;
+        pointer-events: none;
+        animation: rise linear infinite;
+        z-index: 1;
+      }
+      @keyframes rise {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 0;
+        }
+        12% {
+          opacity: 0.5;
+        }
+        88% {
+          opacity: 0.35;
+        }
+        100% {
+          transform: translateY(-112vh) rotate(340deg);
+          opacity: 0;
+        }
+      }
+
+      /* top bar */
+      .top-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 22px 26px;
+        font-family: "Quicksand", sans-serif;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(251, 246, 236, 0.55);
+        z-index: 6;
+        pointer-events: none;
+      }
+      .top-bar .tb-center {
+        color: var(--blush);
+      }
+
+      /* book */
+      .book {
+        position: relative;
+        width: 92vw;
+        width: min(440px, 92vw);
+        height: 80vh;
+        height: min(720px, 80dvh);
+        perspective: 1800px;
+        z-index: 4;
+      }
+
+      .page {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: var(--cream);
+        border-radius: 22px;
+        box-shadow:
+          0 30px 60px -18px rgba(0, 0, 0, 0.55),
+          0 0 0 1px rgba(184, 147, 95, 0.28) inset;
+        padding: 40px 30px 26px;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        pointer-events: none;
+        transform: rotateY(0deg) scale(0.94);
+        transition:
+          transform 0.65s cubic-bezier(0.4, 0.05, 0.2, 1),
+          opacity 0.5s ease;
+        overflow: hidden;
+      }
+      .page.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: rotateY(0deg) scale(1);
+        z-index: 3;
+      }
+      .page.prev {
+        opacity: 0;
+        transform: rotateY(-20deg) translateX(-70px) scale(0.9);
+        z-index: 1;
+      }
+      .page.next {
+        opacity: 0;
+        transform: rotateY(20deg) translateX(70px) scale(0.9);
+        z-index: 1;
+      }
+
+      .eyebrow {
+        font-family: "Quicksand", sans-serif;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--rose);
+        margin-bottom: 10px;
+      }
+
+      .script-title {
+        font-family: "Dancing Script", cursive;
+        font-weight: 700;
+        color: var(--wine);
+        line-height: 1;
+      }
+
+      /* ---------- COVER ---------- */
+      .cover {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .cover .eyebrow {
+        position: absolute;
+        top: 40px;
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+      .cover-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .cat-mark {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 4px;
+      }
+      .cover .script-title {
+        font-size: 3.6rem;
+      }
+      .cover-sub {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: 1.05rem;
+        color: rgba(46, 36, 31, 0.75);
+        max-width: 260px;
+      }
+      .cta {
+        position: absolute;
+        bottom: 34px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: none;
+        border: 1px solid var(--wine);
+        color: var(--wine);
+        font-family: "Quicksand", sans-serif;
+        font-weight: 600;
+        font-size: 0.82rem;
+        letter-spacing: 0.06em;
+        padding: 12px 26px;
+        border-radius: 999px;
+        cursor: pointer;
+        transition:
+          background 0.25s ease,
+          color 0.25s ease;
+      }
+      .cta:hover {
+        background: var(--wine);
+        color: var(--cream);
+      }
+
+      .corner-flourish {
+        position: absolute;
+        font-family: "Playfair Display", serif;
+        color: rgba(107, 30, 43, 0.25);
+        font-size: 1.4rem;
+      }
+      .cf-tl {
+        top: 16px;
+        left: 22px;
+      }
+      .cf-br {
+        bottom: 16px;
+        right: 22px;
+        transform: rotate(180deg);
+      }
+
+      /* ---------- ENVELOPE ---------- */
+      .envelope-page {
+        align-items: center;
+        justify-content: center;
+      }
+      .env-wrap {
+        position: relative;
+        width: 100%;
+        max-width: 320px;
+      }
+      .env-body {
+        position: relative;
+        width: 100%;
+        padding-top: 66%;
+        background: var(--cream-warm);
+        border: 1px solid rgba(184, 147, 95, 0.5);
+        border-radius: 8px;
+        box-shadow: 0 10px 24px rgba(74, 20, 32, 0.15);
+      }
+      .env-addr {
+        position: absolute;
+        top: 14px;
+        left: 16px;
+        right: 16px;
+        display: flex;
+        justify-content: space-between;
+        font-family: "Quicksand", sans-serif;
+        font-size: 0.6rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(107, 30, 43, 0.65);
+        z-index: 2;
+      }
+      .env-flap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 62%;
+        background: linear-gradient(135deg, #f7f0e2, var(--cream-warm));
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        transition:
+          transform 0.8s cubic-bezier(0.4, 0.1, 0.3, 1),
+          opacity 0.6s ease;
+        transform-origin: top center;
+        z-index: 3;
+      }
+      .env-wrap.opened .env-flap {
+        transform: translateY(-40px) rotate(-6deg);
+        opacity: 0;
+      }
+      .seal {
+        position: absolute;
+        top: 34%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 35% 30%,
+          #8a2a3a,
+          var(--wine) 70%
+        );
+        border: 2px solid rgba(184, 147, 95, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 4;
+        transition:
+          transform 0.4s ease,
+          opacity 0.4s ease;
+      }
+      .seal svg {
+        width: 24px;
+        height: 24px;
+      }
+      .env-wrap.opened .seal {
+        transform: translate(-50%, -50%) scale(0) rotate(25deg);
+        opacity: 0;
+      }
+      .env-caption {
+        margin-top: 18px;
+        text-align: center;
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: 0.92rem;
+        color: rgba(46, 36, 31, 0.6);
+      }
+
+      /* ---------- LETTER ---------- */
+      .letter-page {
+      }
+      .letter-ribbon {
+        width: 36px;
+        height: 36px;
+        margin: 2px auto 14px;
+      }
+      .letter-body {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: var(--ink);
+        overflow-y: auto;
+        flex: 1;
+        padding-right: 4px;
+      }
+      .letter-body p {
+        margin-bottom: 14px;
+      }
+      .letter-page .eyebrow {
+        text-align: center;
+      }
+      .signature {
+        font-family: "Dancing Script", cursive;
+        font-size: 1.5rem;
+        color: var(--wine);
+        text-align: right;
+        margin-top: 10px;
+      }
+
+      /* ---------- PLAYFUL ---------- */
+      .playful-page {
+        align-items: center;
+        text-align: center;
+      }
+      .playful-q {
+        font-family: "Playfair Display", serif;
+        font-weight: 600;
+        font-style: italic;
+        font-size: 1.5rem;
+        color: var(--wine);
+        margin: 6px 0 18px;
+        line-height: 1.35;
+      }
+      .cat-big {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 6px;
+      }
+      .yn-zone {
+        position: relative;
+        width: 100%;
+        height: 120px;
+        margin-top: 8px;
+      }
+      .btn-yes,
+      .btn-no {
+        font-family: "Quicksand", sans-serif;
+        font-weight: 700;
+        font-size: 0.9rem;
+        padding: 13px 28px;
+        border-radius: 999px;
+        border: none;
+        cursor: pointer;
+      }
+      .btn-yes {
+        position: absolute;
+        left: 50%;
+        top: 8px;
+        transform: translateX(-50%);
+        background: var(--wine);
+        color: var(--cream);
+        box-shadow: 0 10px 20px rgba(107, 30, 43, 0.35);
+      }
+      .btn-no {
+        position: absolute;
+        left: 50%;
+        top: 64px;
+        transform: translateX(-50%);
+        background: transparent;
+        border: 1px solid rgba(107, 30, 43, 0.4);
+        color: var(--wine);
+        transition:
+          left 0.3s ease,
+          top 0.3s ease;
+      }
+      .hint {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: 0.85rem;
+        color: rgba(46, 36, 31, 0.55);
+        margin-top: 10px;
+      }
+
+      /* ---------- MEMORIES ---------- */
+      .memories-page .eyebrow {
+        text-align: center;
+      }
+      .page-heading {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-weight: 500;
+        font-size: 1.15rem;
+        text-align: center;
+        color: var(--wine);
+        margin-bottom: 26px;
+        line-height: 1.4;
+      }
+      .frames {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+      }
+      .frame {
+        background: var(--cream-warm);
+        padding: 10px 10px 16px;
+        border-radius: 6px;
+        box-shadow: 0 12px 22px rgba(74, 20, 32, 0.18);
+        width: 78%;
+      }
+      .frame:nth-child(1) {
+        transform: rotate(-3deg);
+      }
+      .frame:nth-child(2) {
+        transform: rotate(2deg);
+        margin-left: 14%;
+      }
+      .frame:nth-child(3) {
+        transform: rotate(-1.5deg);
+      }
+      .frame-inner {
+        width: 100%;
+        min-height: 90px;
+        aspect-ratio: 4/3;
+        background: linear-gradient(135deg, var(--blush), var(--blush-deep));
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .frame-inner svg {
+        width: 34px;
+        height: 34px;
+        opacity: 0.85;
+      }
+      .frame-cap {
+        margin-top: 8px;
+        text-align: center;
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: 0.85rem;
+        color: rgba(46, 36, 31, 0.7);
+      }
+
+      /* ---------- REASONS ---------- */
+      .reasons-page .eyebrow {
+        text-align: center;
+        margin-bottom: 22px;
+      }
+      .reasons-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        flex: 1;
+        justify-content: center;
+      }
+      .reasons-list li {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.05rem;
+        line-height: 1.5;
+        color: var(--ink);
+      }
+      .reasons-list .num {
+        font-family: "Playfair Display", serif;
+        font-weight: 600;
+        font-style: italic;
+        color: var(--gold);
+        font-size: 1rem;
+        min-width: 26px;
+      }
+
+      /* ---------- GARDEN ---------- */
+      .garden-page {
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .garden-scene {
+        flex: 1;
+        min-height: 0;
+        width: 100%;
+        background-color: #f7efe8;
+        overflow: hidden;
+      }
+      .garden-scene img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .garden-quote {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 26px 28px 30px;
+        background: linear-gradient(
+          180deg,
+          rgba(251, 246, 236, 0),
+          var(--cream) 30%
+        );
+        text-align: center;
+      }
+      .garden-quote p {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: 1.05rem;
+        color: var(--ink);
+      }
+      .garden-quote .script-line {
+        font-family: "Dancing Script", cursive;
+        font-style: normal;
+        font-weight: 700;
+        color: var(--wine);
+        font-size: 1.5rem;
+        margin: 4px 0 8px;
+      }
+      .garden-sub {
+        font-size: 0.8rem !important;
+        color: rgba(46, 36, 31, 0.5) !important;
+      }
+
+      /* ---------- CLOSING ---------- */
+      .closing-page {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .closing-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      .closing-page .script-title.big {
+        font-size: 3.2rem;
+      }
+      .closing-sub {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: 1rem;
+        color: rgba(46, 36, 31, 0.7);
+        max-width: 260px;
+      }
+      .restart {
+        position: absolute;
+        bottom: 34px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: none;
+        border: none;
+        font-family: "Quicksand", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        color: rgba(107, 30, 43, 0.6);
+        cursor: pointer;
+      }
+
+      /* ---------- BOTTOM NAV ---------- */
+      .bottom-nav {
+        position: absolute;
+        bottom: 22px;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        z-index: 6;
+      }
+      .nav-btn {
+        background: none;
+        border: none;
+        color: rgba(251, 246, 236, 0.7);
+        font-family: "Quicksand", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        padding: 8px;
+      }
+      .nav-btn:disabled {
+        opacity: 0.25;
+        cursor: default;
+      }
+      .dots {
+        display: flex;
+        gap: 7px;
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(251, 246, 236, 0.3);
+        cursor: pointer;
+        transition:
+          background 0.25s ease,
+          transform 0.25s ease;
+      }
+      .dot.active {
+        background: var(--blush);
+        transform: scale(1.35);
+      }
+
+      @media (max-width: 380px) {
+        .cover .script-title {
+          font-size: 2.9rem;
+        }
+        .closing-page .script-title.big {
+          font-size: 2.7rem;
+        }
+        .page {
+          padding: 32px 22px 22px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .petal {
+          animation: none;
+          display: none;
+        }
+        .page {
+          transition: opacity 0.3s ease;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage" id="stage">
+      <div class="top-bar">
+        <span class="tb-left">for you</span>
+        <span class="tb-center" id="tbCenter">for you</span>
+        <span class="tb-right" id="tbCount">01 / 08</span>
+      </div>
+
+      <div class="book" id="book">
+        <!-- PAGE 0 : COVER -->
+        <div class="page active cover" data-title="for you">
+          <p class="eyebrow">Glamorous Angelic Celestial Flawless</p>
+          <div class="cover-center">
+            <svg
+              class="cat-mark"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <ellipse
+                cx="50"
+                cy="58"
+                rx="30"
+                ry="26"
+                fill="var(--cream)"
+                stroke="var(--wine)"
+                stroke-width="3"
+              />
+              <path
+                d="M24 40 L18 18 L38 32 Z"
+                fill="var(--cream)"
+                stroke="var(--wine)"
+                stroke-width="3"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M76 40 L82 18 L62 32 Z"
+                fill="var(--cream)"
+                stroke="var(--wine)"
+                stroke-width="3"
+                stroke-linejoin="round"
+              />
+              <circle cx="40" cy="56" r="3" fill="var(--wine)" />
+              <circle cx="60" cy="56" r="3" fill="var(--wine)" />
+              <path
+                d="M46 66 Q50 70 54 66"
+                stroke="var(--wine)"
+                stroke-width="2.4"
+                fill="none"
+                stroke-linecap="round"
+              />
+              <path
+                d="M12 58c8-5 16 1 16 1"
+                stroke="var(--wine)"
+                stroke-width="2.4"
+                fill="none"
+                stroke-linecap="round"
+              />
+              <path
+                d="M88 58c-8-5-16 1-16 1"
+                stroke="var(--wine)"
+                stroke-width="2.4"
+                fill="none"
+                stroke-linecap="round"
+              />
+              <ellipse
+                cx="33"
+                cy="26"
+                rx="5"
+                ry="8"
+                fill="var(--blush)"
+                stroke="var(--wine)"
+                stroke-width="1.6"
+              />
+            </svg>
+            <h1 class="script-title">Sorry</h1>
+            <p class="cover-sub">just you, on my mind, again & again...</p>
+          </div>
+          <button class="cta" onclick="next()">tap to begin →</button>
+        </div>
+
+        <!-- PAGE 3 : PLAYFUL -->
+        <div class="page playful-page" data-title="just checking">
+          <p class="eyebrow">quick question</p>
+          <h2 class="playful-q">
+            do you want to see<br />something I made you?
+          </h2>
+          <svg
+            class="cat-big"
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <ellipse
+              cx="50"
+              cy="60"
+              rx="32"
+              ry="27"
+              fill="var(--cream)"
+              stroke="var(--wine)"
+              stroke-width="3"
+            />
+            <path
+              d="M22 40 L15 16 L37 31 Z"
+              fill="var(--cream)"
+              stroke="var(--wine)"
+              stroke-width="3"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M78 40 L85 16 L63 31 Z"
+              fill="var(--cream)"
+              stroke="var(--wine)"
+              stroke-width="3"
+              stroke-linejoin="round"
+            />
+            <circle cx="39" cy="58" r="3.2" fill="var(--wine)" />
+            <circle cx="61" cy="58" r="3.2" fill="var(--wine)" />
+            <path
+              d="M45 69 Q50 73 55 69"
+              stroke="var(--wine)"
+              stroke-width="2.6"
+              fill="none"
+              stroke-linecap="round"
+            />
+            <path
+              d="M10 60c9-5 17 1 17 1"
+              stroke="var(--wine)"
+              stroke-width="2.6"
+              fill="none"
+              stroke-linecap="round"
+            />
+            <path
+              d="M90 60c-9-5-17 1-17 1"
+              stroke="var(--wine)"
+              stroke-width="2.6"
+              fill="none"
+              stroke-linecap="round"
+            />
+            <ellipse
+              cx="31"
+              cy="24"
+              rx="5.5"
+              ry="9"
+              fill="var(--blush)"
+              stroke="var(--wine)"
+              stroke-width="1.8"
+            />
+            <path
+              d="M78 78 Q92 70 90 88"
+              stroke="var(--wine)"
+              stroke-width="3"
+              fill="none"
+              stroke-linecap="round"
+            />
+          </svg>
+          <div class="yn-zone" id="ynZone">
+            <button class="btn-yes" id="yesBtn" onclick="next()">
+              yes, obviously
+            </button>
+            <button class="btn-no" id="noBtn">no</button>
+          </div>
+          <p class="hint">(no isn't really an option, but go ahead and try)</p>
+        </div>
+
+        <!-- PAGE 1 : ENVELOPE -->
+        <div class="page envelope-page" data-title="open me">
+          <div class="env-wrap" id="envWrap">
+            <div class="env-body">
+              <div class="env-addr">
+                <span>from&nbsp;: me</span>
+                <span>to&nbsp;: you, obviously</span>
+              </div>
+            </div>
+            <div class="env-flap"></div>
+            <button class="seal" id="sealBtn" aria-label="break the seal">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 21s-8-5.2-8-11.2C4 6.6 6.5 4 9.6 4c1.7 0 3.1.8 4 2 .9-1.2 2.3-2 4-2C20.7 4 20 6.6 20 9.8 20 15.8 12 21 12 21z"
+                  fill="var(--cream)"
+                />
+              </svg>
+            </button>
+          </div>
+          <p class="env-caption">handle with care contents: feelings.</p>
+        </div>
+
+        <!-- PAGE 2 : LETTER -->
+        <div class="page letter-page" data-title="a note">
+          <p class="eyebrow">a note, for you</p>
+          <svg
+            class="letter-ribbon"
+            viewBox="0 0 60 60"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M30 30 C20 14, 4 14, 6 26 C8 36, 22 32, 30 30Z"
+              fill="var(--rose)"
+            />
+            <path
+              d="M30 30 C40 14, 56 14, 54 26 C52 36, 38 32, 30 30Z"
+              fill="var(--rose)"
+            />
+            <circle cx="30" cy="30" r="5" fill="var(--wine)" />
+          </svg>
+          <div class="letter-body">
+            <p>
+              First of all, I wanna say sorry. Sorry for all the things I said
+              last night that I didn't mean, sorry for all the times I made you
+              feel like you weren't enough, and sorry for all the times I didn't
+              say what I should have.
+            </p>
+            <p>
+              I wanted to make this as a little surprise for you, but yesterday
+              things got a little out of hand. So I had to make it up as a
+              little apology. I hope you like it, and I hope it makes you smile.
+              I am a little selfish when it comes to you, I don't want to share
+              you with anyone else.
+            </p>
+            <p>
+              You validate such a beautiful energy. I feel blessed to have to be
+              able to share my life with you. If you forgive me, I promise to be
+              better. I promise to be more patient, more understanding, and more
+              loving.
+            </p>
+          </div>
+          <p class="signature">&mdash; Mischievous A</p>
+        </div>
+
+        <!-- PAGE 5 : REASONS -->
+        <div class="page reasons-page" data-title="a few reasons">
+          <p class="eyebrow">reasons, a few of many</p>
+          <ol class="reasons-list">
+            <li>
+              <span class="num">01</span
+              ><span
+                >the way you laugh at your own jokes before you even finish
+                telling them</span
+              >
+            </li>
+            <li>
+              <span class="num">02</span
+              ><span
+                >how you remember tiny details I mentioned once, weeks ago, like
+                it was nothing and using them against me</span
+              >
+            </li>
+            <li>
+              <span class="num">03</span
+              ><span>you make ordinary friday a crazy memory</span>
+            </li>
+            <li>
+              <span class="num">04</span
+              ><span
+                >how soft you are with people, and even softer with me</span
+              >
+            </li>
+            <li>
+              <span class="num">05</span
+              ><span>you, exactly as you are....no edits needed</span>
+            </li>
+          </ol>
+        </div>
+
+        <!-- PAGE 6 : GARDEN -->
+        <div class="page garden-page" data-title="the garden">
+          <div class="garden-scene">
+            <img src="garden.jpg" alt="garden scene" class="garden-image" />
+          </div>
+          <div class="garden-quote">
+            <p>a bouquet felt too small for this &mdash;</p>
+            <p class="script-line">so here's a whole garden instead.</p>
+          </div>
+        </div>
+
+        <!-- PAGE 7 : CLOSING -->
+        <div class="page closing-page" data-title="always">
+          <div class="closing-center">
+            <h1 class="script-title big">call me</h1>
+            <p class="closing-sub">text me, mail me,.... anything</p>
+          </div>
+          <button class="restart" onclick="goTo(0, 'prev')">
+            see it again ↻
+          </button>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <button id="prevBtn" class="nav-btn" aria-label="back">‹ back</button>
+        <div class="dots" id="dots"></div>
+        <button id="nextBtn" class="nav-btn" aria-label="next">next ›</button>
+      </div>
+    </div>
+
+    <script>
+      const pages = Array.from(document.querySelectorAll(".page"));
+      const total = pages.length;
+      let current = 0;
+
+      const tbCenter = document.getElementById("tbCenter");
+      const tbCount = document.getElementById("tbCount");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const dotsWrap = document.getElementById("dots");
+
+      for (let i = 0; i < total; i++) {
+        const d = document.createElement("span");
+        d.className = "dot" + (i === 0 ? " active" : "");
+        d.addEventListener("click", () =>
+          goTo(i, i > current ? "next" : "prev"),
+        );
+        dotsWrap.appendChild(d);
+      }
+      const dots = Array.from(dotsWrap.children);
+
+      function pad(n) {
+        return n < 10 ? "0" + n : "" + n;
+      }
+
+      function renderNav() {
+        tbCenter.textContent = pages[current].dataset.title || "";
+        tbCount.textContent = pad(current + 1) + " / " + pad(total);
+        dots.forEach((d, i) => d.classList.toggle("active", i === current));
+        prevBtn.disabled = current === 0;
+        nextBtn.disabled = current === total - 1;
+      }
+
+      function goTo(index, dir) {
+        if (index < 0 || index >= total || index === current) return;
+        const old = current;
+        pages[old].classList.remove("active");
+        pages[old].classList.add(dir === "next" ? "prev" : "next");
+        pages.forEach((p, i) => {
+          if (i !== old && i !== index)
+            p.classList.remove("active", "prev", "next");
+        });
+        pages[index].classList.remove("prev", "next");
+        pages[index].classList.add("active");
+        current = index;
+        renderNav();
+      }
+
+      function next() {
+        if (current < total - 1) goTo(current + 1, "next");
+      }
+      function prev() {
+        if (current > 0) goTo(current - 1, "prev");
+      }
+
+      prevBtn.addEventListener("click", prev);
+      nextBtn.addEventListener("click", next);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") next();
+        if (e.key === "ArrowLeft") prev();
+      });
+
+      // swipe support
+      let touchStartX = 0;
+      document.getElementById("book").addEventListener(
+        "touchstart",
+        (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        },
+        { passive: true },
+      );
+      document.getElementById("book").addEventListener(
+        "touchend",
+        (e) => {
+          const dx = e.changedTouches[0].screenX - touchStartX;
+          if (Math.abs(dx) > 50) {
+            dx < 0 ? next() : prev();
+          }
+        },
+        { passive: true },
+      );
+
+      // envelope seal
+      const sealBtn = document.getElementById("sealBtn");
+      const envWrap = document.getElementById("envWrap");
+      sealBtn.addEventListener("click", () => {
+        if (envWrap.classList.contains("opened")) return;
+        envWrap.classList.add("opened");
+        setTimeout(next, 800);
+      });
+
+      // dodging "no" button
+      const noBtn = document.getElementById("noBtn");
+      const ynZone = document.getElementById("ynZone");
+      function dodge() {
+        const zoneRect = ynZone.getBoundingClientRect();
+        const btnRect = noBtn.getBoundingClientRect();
+        const maxX = Math.max(zoneRect.width - btnRect.width - 12, 0);
+        const maxY = Math.max(zoneRect.height - btnRect.height - 12, 0);
+        const x = Math.random() * maxX;
+        const y = Math.random() * maxY;
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+        noBtn.style.transform = "none";
+      }
+      noBtn.addEventListener("pointerenter", dodge);
+      noBtn.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        dodge();
+      });
+
+      // ambient petals
+      const stage = document.getElementById("stage");
+      const PETAL_COUNT = 10;
+      for (let i = 0; i < PETAL_COUNT; i++) {
+        const p = document.createElement("span");
+        p.className = "petal";
+        const size = 8 + Math.random() * 10;
+        p.style.width = size + "px";
+        p.style.height = size + "px";
+        p.style.left = Math.random() * 100 + "%";
+        p.style.animationDuration = 14 + Math.random() * 10 + "s";
+        p.style.animationDelay = Math.random() * 14 + "s";
+        stage.appendChild(p);
+      }
+
+      renderNav();
+    </script>
+  </body>
+</html>
